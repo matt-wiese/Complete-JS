@@ -115,6 +115,7 @@ const massJohn = 85;
 const heightMark = 1.88;
 const heightJohn = 1.76;
 
+//CODING CHALLENGE #1
 const bmiMark = massMark / heightMark ** 2;
 const bmiJohn = massJohn / heightJohn ** 2;
 
@@ -161,6 +162,7 @@ if (birthYear <= 2000) {
 }
 console.log(century);
 
+//CODING CHALLENGE #2
 const massMark = 95;
 const massJohn = 85;
 const heightMark = 1.88;
@@ -182,7 +184,6 @@ if (bmiMark > bmiJohn) {
     )}) is higher than Mark's (${bmiMark.toFixed(1)})!`
   );
 }
-*/
 
 // type conversion
 const inputYear = "1991";
@@ -204,3 +205,250 @@ let n = "1" + 1;
 n = n - 1;
 
 console.log(n);
+
+// 5 falsey values: 0, '', undefined, null, NaN
+
+console.log(Boolean(0));
+console.log(Boolean(undefined));
+console.log(Boolean("Matt"));
+console.log(Boolean({}));
+console.log(Boolean(""));
+
+const money = 100;
+if (money) {
+  console.log("Don't spend it all");
+} else {
+  console.log("You should get a job");
+}
+
+let height = 0;
+if (height) {
+  console.log("YAY height is defined");
+} else {
+  console.log("height is undefined");
+}
+
+const age = "18";
+if (age === 18) console.log("you just became an adult (strict)");
+
+if (age == 18) console.log("you just became an adult (loose)");
+
+const favorite = Number(prompt("what your favorite nuber"));
+console.log(favorite);
+console.log(typeof favorite);
+
+if (favorite === 23) {
+  // 23 == 23
+  console.log("cool - 23 is an amazing number");
+} else if (favorite === 7) {
+  console.log("7 is also cool");
+} else if (favorite === 9) {
+  console.log("9 is also cool");
+} else {
+  console.log("number is not 23 or 7");
+}
+
+if (favorite !== 23) {
+  console.log("why not the 23");
+}
+
+const hasDriversLicense = true;
+const hasGoodVision = true;
+
+console.log(hasDriversLicense && hasGoodVision);
+console.log(hasDriversLicense || hasGoodVision);
+console.log(!hasDriversLicense);
+
+// if (hasDriversLicense && hasGoodVision) {
+//   console.log("Sarah can drive");
+// } else {
+//   console.log("someone else should drive");
+// }
+
+const isTired = false;
+console.log(hasDriversLicense && hasGoodVision && isTired);
+
+if (hasDriversLicense && hasGoodVision && !isTired) {
+  console.log("Sarah can drive");
+} else {
+  console.log("someone else should drive");
+}
+
+//CODING CHALLENGE #3
+// const dolphinsData = [96, 108, 89];
+// const koalasData = [88, 91, 110];
+
+// function avgGymData(gymData) {
+//   let total = 0;
+//   for (let i = 0; i < gymData.length; i++) {
+//     total += gymData[i];
+//   }
+//   return (total / gymData.length).toFixed(2);
+// }
+
+// if (avgGymData(dolphinsData) > avgGymData(koalasData)) {
+//   console.log(
+//     `Dolphins win! the scores were ${avgGymData(dolphinsData)} to ${avgGymData(
+//       koalasData
+//     )}`
+//   );
+// } else if (avgGymData(dolphinsData) < avgGymData(koalasData)) {
+//   console.log(
+//     `Koalas win! the scores were ${avgGymData(koalasData)} to ${avgGymData(
+//       dolphinsData
+//     )}`
+//   );
+// } else if (avgGymData(dolphinsData) === avgGymData(koalasData)) {
+//   console.log("Draw!");
+// }
+
+//BONUS 1
+// const dolphinsData = [97, 112, 101];
+// const koalasData = [109, 95, 123];
+
+// function avgGymData(gymData) {
+//   let total = 0;
+//   for (let i = 0; i < gymData.length; i++) {
+//     total += gymData[i];
+//   }
+//   return (total / gymData.length).toFixed(2);
+// }
+
+// if (
+//   avgGymData(dolphinsData) > avgGymData(koalasData) &&
+//   avgGymData(dolphinsData) >= 100
+// ) {
+//   console.log(
+//     `Dolphins win! the scores were ${avgGymData(dolphinsData)} to ${avgGymData(
+//       koalasData
+//     )}`
+//   );
+// } else if (
+//   avgGymData(dolphinsData) < avgGymData(koalasData) &&
+//   avgGymData(koalasData) >= 100
+// ) {
+//   console.log(
+//     `Koalas win! the scores were ${avgGymData(koalasData)} to ${avgGymData(
+//       dolphinsData
+//     )}`
+//   );
+// } else if (avgGymData(dolphinsData) === avgGymData(koalasData)) {
+//   console.log("Draw!");
+// }
+
+//BONUS 2
+const dolphinsData = [97, 112, 81];
+const koalasData = [109, 95, 86];
+
+function avgGymData(gymData) {
+  let total = 0;
+  for (let i = 0; i < gymData.length; i++) {
+    total += gymData[i];
+  }
+  return (total / gymData.length).toFixed(2);
+}
+
+if (
+  avgGymData(dolphinsData) > avgGymData(koalasData) &&
+  avgGymData(dolphinsData) >= 100
+) {
+  console.log(
+    `Dolphins win! the scores were ${avgGymData(dolphinsData)} to ${avgGymData(
+      koalasData
+    )}`
+  );
+} else if (
+  avgGymData(dolphinsData) < avgGymData(koalasData) &&
+  avgGymData(koalasData) >= 100
+) {
+  console.log(
+    `Koalas win! the scores were ${avgGymData(koalasData)} to ${avgGymData(
+      dolphinsData
+    )}`
+  );
+} else if (
+  avgGymData(dolphinsData) === avgGymData(koalasData) &&
+  avgGymData(dolphinsData) &&
+  avgGymData(koalasData) > 100
+) {
+  console.log(
+    `Draw! team scores: Dolphoins - ${avgGymData(
+      dolphinsData
+    )} to Koalas - ${avgGymData(koalasData)}`
+  );
+} else {
+  console.log("None wins!");
+}
+
+const day = "monday";
+
+switch (day) {
+  case "monday": // day === 'monday'
+    console.log("plan course structure");
+    console.log("go to coding meetup");
+    break;
+  case "tuesday":
+    console.log("prepare theory videos");
+    break;
+  case "wednesday":
+  case "thursday":
+    console.log("write code examples");
+    break;
+  case "friday":
+    console.log("record videos");
+    break;
+  case "saturday":
+  case "sunday":
+    console.log("enjoy the weekend");
+    break;
+  default:
+    console.log("not a valid day");
+}
+
+if (day === "monday") {
+  console.log("plan course structure");
+  console.log("go to coding meetup");
+} else if (day === "tuesday") {
+  console.log("prepare theory videos");
+} else if (day === ("thursday" || "wednesday")) {
+  console.log("write code examples");
+} else if (day === ("friday" || "saturday")) {
+  console.log("record videos");
+} else if (day === "sunday") {
+  console.log("enjoy the weekend");
+} else {
+  console.log("not a valid day");
+}
+
+const age = 42;
+// age >= 18
+//   ? console.log("I like to drink wine 🍷")
+//   : console.log("I like to drink water 💧");
+
+const drink = age >= 18 ? "wine 🍷" : "water 💧";
+
+console.log(drink);
+
+let drink2;
+if (age >= 18) {
+  drink2 = "wine 🍷";
+} else {
+  drink2 = "water 💧";
+}
+
+console.log(drink2);
+
+console.log(`I like to drink ${age >= 18 ? "wine 🍷" : "water 💧"}`);
+
+//CODING CHALLENGE #4
+
+function tipCalc(bill) {
+  let total = 0;
+  50 < bill > 300 ? (total = bill + bill * 0.15) : (total = bill + bill * 0.2);
+  return `The bill was ${bill.toFixed(2)}, the tip was ${(total - bill).toFixed(
+    2
+  )}, and the total value ${total.toFixed(2)}`;
+}
+
+console.log(tipCalc(275));
+*/
