@@ -3,14 +3,6 @@
 // prettier-ignore
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const form = document.querySelector('.form');
-const containerWorkouts = document.querySelector('.workouts');
-const inputType = document.querySelector('.form__input--type');
-const inputDistance = document.querySelector('.form__input--distance');
-const inputDuration = document.querySelector('.form__input--duration');
-const inputCadence = document.querySelector('.form__input--cadence');
-const inputElevation = document.querySelector('.form__input--elevation');
-
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
@@ -23,6 +15,8 @@ class Workout {
 }
 
 class Running extends Workout {
+  type = 'running';
+
   constructor(coords, distance, duration, cadence) {
     super(coords, distance, duration);
     this.cadence = cadence;
@@ -36,6 +30,8 @@ class Running extends Workout {
 }
 
 class Cycling extends Workout {
+  type = 'cycling';
+
   constructor(coords, distance, duration, elevationGain) {
     super(coords, distance, duration);
     this.elevationGain = elevationGain;
@@ -50,9 +46,20 @@ class Cycling extends Workout {
 }
 
 // Architecture
+
+const form = document.querySelector('.form');
+const containerWorkouts = document.querySelector('.workouts');
+const inputType = document.querySelector('.form__input--type');
+const inputDistance = document.querySelector('.form__input--distance');
+const inputDuration = document.querySelector('.form__input--duration');
+const inputCadence = document.querySelector('.form__input--cadence');
+const inputElevation = document.querySelector('.form__input--elevation');
+
 class App {
   #map;
   #mapEvent;
+  #workouts = [];
+
   constructor() {
     this._getPosition();
 
@@ -101,16 +108,59 @@ class App {
   }
 
   _newWorkout(e) {
+    const validInputs = (...inputs) =>
+      inputs.every(inp => Number.isFinite(inp));
+    const allPositive = (...inputs) => inputs.every(inp => inp > 0);
+
     e.preventDefault();
 
-    // clear input fields
-    inputDistance.value = inputDuration.value = inputCadence.value = inputElevation.value =
-      '';
-
-    // display marker
-    // console.log(this.#mapEvent);
+    // get data from the form
+    const type = inputType.value;
+    const distance = inputDistance.value;
+    const duration = inputDuration.value;
     const { lat, lng } = this.#mapEvent.latlng;
+    let workout;
 
+    // the activity is 'running', create 'running' obj
+    if (type === 'running') {
+      const cadence = +inputCadence.value;
+
+      // Check if data is valid
+      if (
+        // !Number.isFinite(distance) ||
+        // !Number.isFinite(duration) ||
+        // !Number.isFinite(cadence)
+        !validInputs(distance, duration, cadence) ||
+        !allPositive(distance, duration, cadence)
+      )
+        return alert('Inputs have to be positive numbers!');
+
+      workout = new Running([lat, lng], distance, duration, cadence);
+    }
+
+    // the activity is 'cycling', create 'cycling' obj
+    if (type === 'cycling') {
+      const elevation = +inputElevation.value;
+
+      // check if data is valid
+      // GUARD CLAUSE
+      // !Number.isFinite(distance) ||
+      // !Number.isFinite(duration) ||
+      // !Number.isFinite(elevation)
+      if (
+        !validInputs(distance, duration, elevation) ||
+        !allPositive(distance, duration)
+      )
+        return alert('Must Be Positive Numbers');
+
+      workout = new Cycling([lat, lng], distance, duration, elevation);
+    }
+
+    // add new object to array
+    this.#workouts.push(workout);
+    console.log(workout);
+
+    // Render workout on map as marker
     L.marker([lat, lng])
       .addTo(this.#map)
       .bindPopup(
@@ -124,6 +174,15 @@ class App {
       )
       .setPopupContent('Workout')
       .openPopup();
+
+    // render workout on list
+
+    // hide form and clear input fileds
+
+    // clear input fields
+
+    inputDistance.value = inputDuration.value = inputCadence.value = inputElevation.value =
+      '';
   }
 }
 
