@@ -400,7 +400,6 @@ createImg('img/img-1.jpg')
   .catch(err => {
     console.error(`${err}💥💥💥`);
   });
-*/
 
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
@@ -417,23 +416,204 @@ const getPosition = function () {
 // );
 
 const whereAmI = async function () {
-  // Geolocation
-  const pos = await getPosition();
-  const { latitude: lat, longitude: lng } = pos.coords;
+  try {
+    // Geolocation
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
 
-  // reverse Geocoding
-  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
-  const dataGeo = await resGeo.json();
-  console.log(dataGeo);
+    // reverse Geocoding
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    if (!resGeo.ok) throw new Error('Problem getting location data');
+    const dataGeo = await resGeo.json();
 
-  // Country data
-  const res = await fetch(
-    `https://restcountries.eu/rest/v2/name/${dataGeo.country}`
-  );
-  const data = await res.json();
-  console.log(data);
-  renderCountry(data[0]);
+    // Country data
+    const res = await fetch(
+      `https://restcountries.eu/rest/v2/name/${dataGeo.country}`
+    );
+    if (!resGeo.ok) throw new Error('Problem getting country');
+    const data = await res.json();
+    renderCountry(data[0]);
+
+    return `You are in ${dataGeo.city}, ${dataGeo.state}, in county ${dataGeo.country}`;
+  } catch (err) {
+    console.error(`${err} 💥💥💥`);
+    renderError(`Somethign went wrong 💥💥💥${err.message}`);
+
+    // Reject promise returned from ASYNC fucntion
+    throw err;
+  }
 };
 
-whereAmI();
-console.log('FIRST');
+console.log('1: Will get Location');
+// const city = whereAmI();
+// console.log(city);
+
+// whereAmI()
+//   .then(city => console.log(`2: ${city}`))
+//   .catch(err => console.error(`2: ${err.message}`))
+//   .finally(() => console.log('3: Finished getting Location'));
+
+(async function () {
+  try {
+    const city = whereAmI();
+    console.log(`2: ${city}`);
+  } catch (err) {
+    console.error(`2: ${err.message}`);
+  }
+  console.log('3: Finished getting Location');
+})();
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJSON(
+    //   `https://restcountries.eu/rest/v2/name/${c1}`
+    // );
+    // const [data2] = await getJSON(
+    //   `https://restcountries.eu/rest/v2/name/${c2}`
+    // );
+    // const [data3] = await getJSON(
+    //   `https://restcountries.eu/rest/v2/name/${c3}`
+    // );
+    // console.log(data1.capital, data2.capital, data3.capital);
+    const data = await Promise.all([
+      getJSON(`https://restcountries.eu/rest/v2/name/${c1}`),
+      getJSON(`https://restcountries.eu/rest/v2/name/${c2}`),
+      getJSON(`https://restcountries.eu/rest/v2/name/${c3}`),
+    ]);
+    console.log(data.map(d => d[0].capital));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+get3Countries('portugal', 'canada', 'tanzania');
+
+// Promise.race
+(async function () {
+  const res = await Promise.race([
+    getJSON(`https://restcountries.eu/rest/v2/name/italy`),
+    getJSON(`https://restcountries.eu/rest/v2/name/egypt`),
+    getJSON(`https://restcountries.eu/rest/v2/name/mexico`),
+  ]);
+  console.log(res[0]);
+})();
+
+const timeout = function (sec) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error('Request took too long'));
+    }, sec * 1000);
+  });
+};
+
+Promise.race([
+  getJSON(`https://restcountries.eu/rest/v2/name/tanzania`),
+  timeout(0.15),
+])
+  .then(res => console.log(res[0]))
+  .catch(err => console.error(err));
+
+// Promise.allSettled
+Promise.allSettled([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Another Success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+
+// Promis.any [ES2021]
+Promise.any([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Another Success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+*/
+
+//CODING CHALLENGE #3
+
+const createImg = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const image = document.createElement('img');
+    image.src = imgPath;
+
+    image.addEventListener('load', function () {
+      document.querySelector('.images').append(image);
+      resolve(image);
+    });
+    image.addEventListener('error', function () {
+      reject(new Error(`Coulnd't load image!`));
+    });
+  });
+};
+
+// let currentImage;
+
+// createImg('img/img-1.jpg')
+//   .then(image => {
+//     currentImage = image;
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImage.style.display = 'none';
+//     return createImg('img/img-2.jpg');
+//   })
+//   .then(image => {
+//     currentImage = image;
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImage.style.display = 'none';
+//     return createImg('img/img-3.jpg');
+//   })
+//   .then(image => {
+//     currentImage = image;
+//     return wait(2);
+//   })
+//   .catch(err => {
+//     console.error(`${err}💥💥💥`);
+//   });
+
+const loadNPause = async function () {
+  try {
+    let image = await createImg('img/img-1.jpg');
+    await wait(2);
+    image.style.display = 'none';
+
+    image = await createImg('img/img-2.jpg');
+    await wait(2);
+    image.style.display = 'none';
+
+    image = await createImg('img/img-3.jpg');
+    await wait(2);
+    image.style.display = 'none';
+  } catch (err) {
+    console.error(`${err}💥💥💥`);
+  }
+};
+
+// loadNPause();
+
+// promisifying setTimeout
+const wait = seconds => {
+  return new Promise(resolve => {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+const loadAll = async function (imgArr) {
+  try {
+    const imgs = imgArr.map(async img => await createImg(img));
+    const imgsEl = await Promise.all(imgs);
+    imgsEl.forEach(img => img.classList.add('parallel'));
+    console.log(imgsEl);
+  } catch (err) {
+    console.error(`${err}💥💥💥`);
+  }
+};
+
+const testArr = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'];
+
+loadAll(testArr);
